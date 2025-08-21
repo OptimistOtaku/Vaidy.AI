@@ -1,0 +1,101 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: localdev
+      POSTGRES_USER: app
+      POSTGRES_DB: vaidyai
+    ports:
+      - "5432:5432"
+
+  risk-service:
+    build: ./services/risk-service
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+      - LLM_SERVICE_URL=http://hf-llm-service:8084
+    depends_on:
+      - redis
+
+  queue-service:
+    build: ./services/queue-service
+    ports:
+      - "8082:8082"
+    environment:
+      - PORT=8082
+      - REDIS_URL=redis://redis:6379
+      - PGHOST=postgres
+      - PGPORT=5432
+      - PGUSER=app
+      - PGPASSWORD=localdev
+      - PGDATABASE=vaidyai
+    depends_on:
+      - redis
+      - postgres
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./.ollama:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=-1
+
+  llm-service:
+    build: ./services/llm-service
+    ports:
+      - "8083:8083"
+    environment:
+      - PORT=8083
+      - OLLAMA_URL=http://ollama:11434
+      - OLLAMA_MODEL=llama3.2:3b-instruct
+    depends_on:
+      - ollama
+
+  hf-llm-service:
+    build: ./services/hf-llm-service
+    ports:
+      - "8084:8084"
+    environment:
+      - PORT=8084
+      - HF_MODEL_ID=TinyLlama/TinyLlama-1.1B-Chat-v1.0
+      - PEFT_ADAPTER_PATH=/models/adapter
+    volumes:
+      - ./ml/finetune/output:/models/adapter
+
+  intake-api:
+    build: ./services/intake-api
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - RISK_SERVICE_URL=http://risk-service:8081
+      - QUEUE_SERVICE_URL=http://queue-service:8082
+    depends_on:
+      - risk-service
+      - queue-service
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_BASE_URL=http://localhost:8080
+      - REACT_APP_QUEUE_BASE_URL=http://localhost:8082
+    depends_on:
+      - intake-api
+      - queue-service
+
+networks:
+  default:
+    name: vaidyai-net
+

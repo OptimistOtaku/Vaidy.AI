@@ -1,0 +1,93 @@
+# Node
+node_modules/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build
+/dist/
+/build/
+/.next/
+/.vercel/
+
+# Environment
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.venv/
+venv/
+ENV/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# Others
+*.sublime-workspace
+*.sublime-project
+.idea/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Output
+Vaidy.AI/ml/finetune/output/
+Vaidy.AI/.ollama/id_ed25519
+Vaidy.AI/frontend/node_modules/
+Vaidy.AI/frontend/build/
+Vaidy.AI/frontend/dist/
+Vaidy.AI/frontend/.next/
+Vaidy.AI/frontend/.vercel/
+Vaidy.AI/frontend/.env*
+Vaidy.AI/frontend/package-lock.json
+Vaidy.AI/frontend/.DS_Store
+Vaidy.AI/frontend/Thumbs.db
+Vaidy.AI/frontend/.vscode/
+Vaidy.AI/frontend/.idea/
+Vaidy.AI/frontend/*.log
+Vaidy.AI/frontend/*.swp
+Vaidy.AI/frontend/*.swo
+Vaidy.AI/ml/__pycache__/
+Vaidy.AI/ml/*.pyc
+Vaidy.AI/ml/*.pyo
+Vaidy.AI/ml/*.pyd
+Vaidy.AI/ml/.env
+Vaidy.AI/ml/.venv/
+Vaidy.AI/ml/venv/
+Vaidy.AI/ml/ENV/
+Vaidy.AI/services/*/node_modules/
+Vaidy.AI/services/*/build/
+Vaidy.AI/services/*/dist/
+Vaidy.AI/services/*/.env*
+Vaidy.AI/services/*/.DS_Store
+Vaidy.AI/services/*/Thumbs.db
+Vaidy.AI/services/*/.vscode/
+Vaidy.AI/services/*/.idea/
+Vaidy.AI/services/*/*.log
+Vaidy.AI/services/*/*.swp
+Vaidy.AI/services/*/*.swo
+Vaidy.AI/services/*/__pycache__/
+Vaidy.AI/services/*/*.pyc
+Vaidy.AI/services/*/*.pyo
+Vaidy.AI/services/*/*.pyd
+Vaidy.AI/services/*/.venv/
+Vaidy.AI/services/*/venv/
+Vaidy.AI/services/*/ENV/
+Vaidy.AI/services/*/package-lock.json

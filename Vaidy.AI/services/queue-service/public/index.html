@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vaidy.AI Queue</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 20px; }
+      h1 { margin-bottom: 8px; }
+      .status { color: #666; font-size: 14px; }
+      table { border-collapse: collapse; width: 100%; margin-top: 16px; }
+      th, td { border: 1px solid #ddd; padding: 8px; }
+      th { background: #f7f7f7; text-align: left; }
+      .CRITICAL { background: #ffebee; }
+      .HIGH { background: #fff3e0; }
+      .MEDIUM { background: #e3f2fd; }
+      .LOW { background: #e8f5e9; }
+    </style>
+  </head>
+  <body>
+    <h1>Queue</h1>
+    <div class="status" id="status">Connecting…</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Encounter</th>
+          <th>Band</th>
+          <th>Priority</th>
+          <th>Wait (min)</th>
+          <th>Status</th>
+          <th>Updated</th>
+          <th>Assign</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <script>
+      const rows = document.getElementById('rows');
+      const statusEl = document.getElementById('status');
+
+      function fmt(ts){ const d=new Date(ts); return d.toLocaleTimeString(); }
+
+      async function load(){
+        const res = await fetch('/queue');
+        const data = await res.json();
+        render(data);
+      }
+
+      function render(entries){
+        rows.innerHTML = '';
+        entries.sort((a,b)=> b.priorityScore-a.priorityScore || a.createdAt-b.createdAt)
+          .forEach(e => {
+            const tr = document.createElement('tr');
+            tr.className = e.band;
+            tr.innerHTML = `<td>${e.encounterId}</td><td>${e.band}</td><td>${e.priorityScore}</td><td>${e.waitMinutes}</td><td>${e.status}${e.assignedProviderId?` (${e.assignedProviderId})`:''}</td><td>${fmt(e.updatedAt)}</td><td><button data-eid="${e.encounterId}">Assign</button></td>`;
+            rows.appendChild(tr);
+          });
+        Array.from(document.querySelectorAll('button[data-eid]')).forEach(btn => {
+          btn.addEventListener('click', async (ev) => {
+            const encounterId = ev.target.getAttribute('data-eid');
+            const providers = await fetch('/providers').then(r=>r.json());
+            const providerId = prompt('Assign provider (enter provider_id):\n' + providers.map(p=>`${p.provider_id} - ${p.name} (${p.specialty})`).join('\n'));
+            if (!providerId) return;
+            await fetch('/queue/assign', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ encounterId, providerId }) });
+            await load();
+          });
+        });
+      }
+
+      function connect(){
+        const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+        const ws = new WebSocket(`${proto}://${location.host}/queue/stream`);
+        ws.onopen = ()=> statusEl.textContent = 'Live updates connected';
+        ws.onclose = ()=> { statusEl.textContent = 'Disconnected, retrying…'; setTimeout(connect, 1500); };
+        ws.onmessage = async ()=> { await load(); };
+      }
+
+      load();
+      connect();
+      setInterval(load, 10000);
+    </script>
+  </body>
+  </html>
+
+

@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vaidy.AI Intake</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 20px; }
+      label { display:block; margin-top: 8px; }
+      input, textarea { width: 100%; padding: 8px; }
+      button { margin-top: 12px; padding: 8px 12px; }
+      .result { margin-top: 16px; white-space: pre-wrap; background:#f7f7f7; padding:12px; }
+    </style>
+  </head>
+  <body>
+    <h1>Patient Intake</h1>
+    <form id="f">
+      <label>MRN <input name="mrn" value="A12345"/></label>
+      <label>DOB <input name="dob" value="1957-04-03"/></label>
+      <label>Narrative <textarea name="narrative">Crushing chest pain radiating to left arm, started 30 minutes ago.</textarea></label>
+      <label>Pain Score (0-10) <input name="painScore" type="number" value="9" min="0" max="10"/></label>
+      <fieldset>
+        <legend>Vitals</legend>
+        <label>HR <input name="hr" type="number" value="105"/></label>
+        <label>BP <input name="bp" value="180/110"/></label>
+        <label>RR <input name="rr" type="number" value="24"/></label>
+        <label>SpO2 <input name="spo2" type="number" value="96"/></label>
+        <label>Temp C <input name="tempC" type="number" step="0.1" value="37.0"/></label>
+      </fieldset>
+      <button type="submit">Submit</button>
+      <a href="http://localhost:8082/" target="_blank">Open Queue</a>
+    </form>
+    <div class="result" id="result"></div>
+    <script>
+      const f = document.getElementById('f');
+      const result = document.getElementById('result');
+      f.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = new FormData(f);
+        const body = {
+          patient: { mrn: data.get('mrn'), dob: data.get('dob') },
+          narrative: data.get('narrative'),
+          painScore: Number(data.get('painScore')),
+          vitals: {
+            hr: Number(data.get('hr')),
+            bp: data.get('bp'),
+            rr: Number(data.get('rr')),
+            spo2: Number(data.get('spo2')),
+            tempC: Number(data.get('tempC')),
+          },
+          language: 'en',
+          specialNeeds: []
+        };
+        const res = await fetch('/intake/encounters', { method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify(body) });
+        const json = await res.json();
+        result.textContent = JSON.stringify(json, null, 2);
+      });
+    </script>
+  </body>
+  </html>
+
+
