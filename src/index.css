@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Medical Emergency Design System - Vaidy.AI
+All colors MUST be HSL. Gradients and themes for trust, hope, and urgency.
+*/
+
+@layer base {
+  :root {
+    /* Medical Background System */
+    --background: 0 0% 100%;
+    --foreground: 228 84% 4.9%;
+    
+    /* Medical Trust Gradient - Primary Blue Tones */
+    --medical-primary: 228 89% 20%; /* #001f65 equivalent */
+    --medical-primary-light: 225 83% 53%; /* #6895fd equivalent */
+    --medical-primary-foreground: 0 0% 100%;
+    
+    /* Warmth & Hope - Yellow Accent */
+    --medical-warm: 48 100% 67%; /* #ffde59 */
+    --medical-warm-foreground: 228 84% 4.9%;
+    
+    /* Emergency Action Colors */
+    --emergency-action: 0 0% 0%;
+    --emergency-action-foreground: 0 0% 100%;
+    
+    /* Clean Medical Whites */
+    --medical-clean: 0 0% 100%;
+    --medical-clean-warm: 48 33% 97%;
+    --medical-clean-foreground: 228 50% 15%;
+    
+    /* Standard Design Tokens */
+    --card: 0 0% 100%;
+    --card-foreground: 228 50% 15%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 228 50% 15%;
+    
+    --primary: 228 89% 20%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 48 33% 97%;
+    --secondary-foreground: 228 50% 15%;
+    
+    --muted: 225 20% 95%;
+    --muted-foreground: 228 20% 50%;
+    
+    --accent: 48 100% 67%;
+    --accent-foreground: 228 84% 4.9%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 225 20% 90%;
+    --input: 225 20% 90%;
+    --ring: 225 83% 53%;
+    
+    --radius: 12px;
+    
+    /* Gradients */
+    --gradient-medical-hero: linear-gradient(180deg, hsl(228 89% 20%), hsl(225 83% 53%));
+    --gradient-medical-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(48 33% 97%));
+    --gradient-warm-glow: linear-gradient(135deg, hsl(48 100% 67% / 0.1), hsl(225 83% 53% / 0.1));
+    
+    /* Animations & Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s ease-out;
+    
+    /* Medical UI Shadows */
+    --shadow-medical: 0 4px 20px hsl(228 89% 20% / 0.08);
+    --shadow-medical-hover: 0 8px 30px hsl(228 89% 20% / 0.12);
+    --shadow-warm: 0 4px 20px hsl(48 100% 67% / 0.15);
+    
+    /* Sidebar (keeping existing) */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
